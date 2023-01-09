@@ -25,6 +25,7 @@ class Preferences {
                 @Suppress("DEPRECATION")
                 return context.getSharedPreferences(PREF_KEY_WHITELIST, Context.MODE_WORLD_READABLE)
             } catch (exc: SecurityException) {
+                // FIXME should handle errors gracefully here, not with a toast and crash.
                 Toast.makeText(context, "Error: please make sure the LSPosed module is installed.", Toast.LENGTH_LONG).show()
                 throw exc
             }
