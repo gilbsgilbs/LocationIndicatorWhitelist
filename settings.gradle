@@ -10,10 +10,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-
-        // Needed for Xposed API
-        //noinspection JcenterRepositoryObsolete
-        jcenter()
+        maven { url "https://api.xposed.info/" }
     }
 }
 rootProject.name = "Override Location Providers"
