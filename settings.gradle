@@ -1,0 +1,20 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+
+        // Needed for Xposed API
+        //noinspection JcenterRepositoryObsolete
+        jcenter()
+    }
+}
+rootProject.name = "Override Location Providers"
+include ':app'
