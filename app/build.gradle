@@ -7,7 +7,7 @@ android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "org.gilbsgilbs.locationindicatorwhitelist"
+        applicationId "fr.netstat.locationindicatorwhitelist"
         minSdk 31
         targetSdk 33
         versionCode 1
@@ -30,7 +30,7 @@ android {
     buildFeatures {
         viewBinding true
     }
-    namespace 'org.gilbsgilbs.locationindicatorwhitelist'
+    namespace 'fr.netstat.locationindicatorwhitelist'
 }
 
 dependencies {

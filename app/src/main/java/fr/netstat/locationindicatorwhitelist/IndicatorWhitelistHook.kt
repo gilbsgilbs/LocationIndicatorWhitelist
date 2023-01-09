@@ -1,4 +1,4 @@
-package org.gilbsgilbs.locationindicatorwhitelist
+package fr.netstat.locationindicatorwhitelist
 
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.XposedBridge;

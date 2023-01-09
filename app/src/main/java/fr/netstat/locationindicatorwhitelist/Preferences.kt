@@ -1,4 +1,4 @@
-package org.gilbsgilbs.locationindicatorwhitelist
+package fr.netstat.locationindicatorwhitelist
 
 import android.annotation.SuppressLint
 import android.content.Context
