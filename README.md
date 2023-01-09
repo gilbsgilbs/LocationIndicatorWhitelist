@@ -32,16 +32,17 @@ notification dot.
   directly, but none of my attempts were successful. I had to hook into SystemUI instead. If you
   find a way to hook into android framework directly, please let me know. Here's a sneak peek of my
   unsuccessful hook attempts:
-  - android.permission.PermissionUsageHelper => shouldShowLocationIndicator
-  - android.provider.DeviceConfig => get/setBoolean("location_indicators_enabled")
-  - android.permission.PermissionManager => android.permission.PermissionManager
-  - Patching resource config_locationExtraPackageNames
+  - `android.permission.PermissionUsageHelper` => `shouldShowLocationIndicator`
+  - `android.provider.DeviceConfig` => `get/setBoolean("location_indicators_enabled")`
+  - `android.permission.PermissionManager` => `android.permission.PermissionManager`
+  - Patching resource `config_locationExtraPackageNames`
   - Systemizing whitelisted apps
-  - com.android.systemui.statusbar.phone.PhoneStatusBarPolicy => onLocationActiveChanged
+  - `com.android.systemui.statusbar.phone.PhoneStatusBarPolicy` => `onLocationActiveChanged`
   - a combination of all those
-- As the patch is in the UI rather than the framework, locations of the whitelisted packages still
-  gets reported by the framework. Therefore, if a non-whitelisted app accesses location, if you open
-  the location history by pressing the indicator, whitelisted apps will show.
-- This project still uses XPosed legacy hook framework from JCenter, although there are more
-  up-to-date alternatives now, such as [Yuki Hook API](https://fankes.github.io/YukiHookAPI/en/guide/home.html).
-- UI is clunky but simple and straight to the point.
+- UI is clunky but simple and straight to the point. It lacks a search feature though.
+
+### Contributing
+
+Please open issues and PRs on [the upstream
+repo](https://github.com/gilbsgilbs/LocationIndicatorWhitelist), not on the
+[XPosed-Module-Repo](https://github.com/Xposed-Modules-Repo/fr.netstat.locationindicatorwhitelist).
