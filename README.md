@@ -34,7 +34,7 @@ notification dot.
   unsuccessful hook attempts:
   - `android.permission.PermissionUsageHelper` => `shouldShowLocationIndicator`
   - `android.provider.DeviceConfig` => `get/setBoolean("location_indicators_enabled")`
-  - `android.permission.PermissionManager` => `android.permission.PermissionManager`
+  - `android.permission.PermissionManager` => `getIndicatorExemptedPackages`
   - Patching resource `config_locationExtraPackageNames`
   - Systemizing whitelisted apps
   - `com.android.systemui.statusbar.phone.PhoneStatusBarPolicy` => `onLocationActiveChanged`
