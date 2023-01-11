@@ -7,7 +7,7 @@ import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
 
 fun xLog(msg: String) {
-    XposedBridge.log(msg)
+    XposedBridge.log("(LocationIndicatorWhitelist) $msg")
 }
 
 fun xLogDebug(msg: String) {
@@ -33,10 +33,10 @@ class IndicatorWhitelistHook : IXposedHookLoadPackage {
                                 val packageName = (appOpItem::class.java.getField("mPackageName").get(appOpItem)) as String
                                 val whitelist = Preferences.getWhitelist()
                                 val isWhitelisted = whitelist.contains(packageName)
-                                xLogDebug("(LocationIndicatorWhitelist) $packageName is active.")
-                                xLogDebug("(LocationIndicatorWhitelist) whitelist: ${whitelist.joinToString()}.")
+                                xLogDebug("$packageName is active.")
+                                xLogDebug("whitelist: ${whitelist.joinToString()}.")
                                 if (isWhitelisted) {
-                                    xLogDebug("(LocationIndicatorWhitelist) $packageName is whitelisted, filtering it out.")
+                                    xLogDebug("$packageName is whitelisted, filtering it out.")
                                 }
                                 !isWhitelisted
                             }.toCollection(ArrayList())
