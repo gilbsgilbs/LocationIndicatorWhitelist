@@ -27,8 +27,7 @@ class IndicatorWhitelistHook : IXposedHookLoadPackage {
                     Boolean::class.javaPrimitiveType, // showPaused
                     object : XC_MethodHook() {
                         override fun afterHookedMethod(param: MethodHookParam) {
-                            @Suppress("UNCHECKED_CAST")
-                            val result = param.getResult() as ArrayList<Any>
+                            val result = param.result as ArrayList<*>
                             val filteredResult = result.filter { appOpItem ->
                                 val packageName = (appOpItem::class.java.getField("mPackageName").get(appOpItem)) as String
                                 val whitelist = Preferences.getWhitelist()
