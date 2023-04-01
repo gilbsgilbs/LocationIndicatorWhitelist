@@ -1,12 +1,17 @@
 package fr.netstat.locationindicatorwhitelist
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 
 private data class Pkg(val packageName: String, val appName: String) {
@@ -15,8 +20,10 @@ private data class Pkg(val packageName: String, val appName: String) {
 
 class MainActivity : AppCompatActivity() {
     companion object {
-        private val TAG = Preferences::class.qualifiedName
+        private val TAG = MainActivity::class.qualifiedName
     }
+
+    private var currentSearch = ""
 
     @SuppressLint("QueryPermissionsNeeded")
     private fun getInstalledPackagesInfo(flags: Long = 0) =
@@ -51,12 +58,22 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
+        updatePackagesListView()
+    }
 
+    private fun updatePackagesListView() {
         val whitelist = Preferences.getWhitelist(this)
         Log.d(TAG, "whitelist: ${whitelist.joinToString()}")
 
+        val currentSearch = currentSearch.lowercase()
         val packageList =
             getInstalledPackages()
+                .filter { pkg ->
+                    Log.d(TAG, "current search: $currentSearch")
+                    currentSearch == "" ||
+                        pkg.appName.lowercase().contains(currentSearch) ||
+                        pkg.packageName.lowercase().contains(currentSearch)
+                }
                 .sortedWith(
                     compareBy(
                         { !whitelist.contains(it.packageName) },
@@ -85,5 +102,33 @@ class MainActivity : AppCompatActivity() {
                 Preferences.removeFromWhitelist(this, packageName)
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.options_menu, menu)
+
+        val searchItem: MenuItem = menu.findItem(R.id.search)
+        val searchView: SearchView = searchItem.actionView as SearchView
+        searchView.maxWidth = Integer.MAX_VALUE
+        searchView.isFocusable = true
+        searchView.isIconifiedByDefault = true
+        searchView.setOnQueryTextFocusChangeListener { view, hasFocus ->
+            if (hasFocus) {
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.showSoftInput(view.findFocus(), 0)
+            }
+        }
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean = true
+            override fun onQueryTextChange(newText: String?): Boolean {
+                currentSearch = newText ?: ""
+                updatePackagesListView()
+                return true
+            }
+        })
+        searchView.requestFocus()
+        searchView.requestFocusFromTouch()
+
+        return true
     }
 }
