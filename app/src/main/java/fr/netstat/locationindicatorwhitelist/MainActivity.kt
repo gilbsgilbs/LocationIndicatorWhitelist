@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         }
 
     private fun getInstalledPackagesNames(flags: Int = 0) =
-        getInstalledPackages(flags).map { it.packageName }.sorted()
+            getInstalledPackages(flags).map { it.packageName }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,11 +32,20 @@ class MainActivity : AppCompatActivity() {
         val whitelist = Preferences.getWhitelist(this)
         Log.d(TAG, "whitelist: ${whitelist.joinToString()}")
 
-        val adapter = ArrayAdapter(
-            this,
-            android.R.layout.simple_list_item_multiple_choice,
-            getInstalledPackagesNames(),
-        )
+        val packageList =
+                getInstalledPackagesNames()
+                        .sortedWith(
+                                compareBy(
+                                        { !whitelist.contains(it) },
+                                        { it },
+                                )
+                        )
+        val adapter =
+                ArrayAdapter(
+                        this,
+                        android.R.layout.simple_list_item_multiple_choice,
+                        packageList,
+                )
         val listView = findViewById<ListView>(R.id.packages_list_view)
         listView.adapter = adapter
         listView.choiceMode = ListView.CHOICE_MODE_MULTIPLE
