@@ -9,24 +9,44 @@ import android.widget.ArrayAdapter
 import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
 
+private data class Pkg(val packageName: String, val appName: String) {
+    override fun toString() = if (appName == packageName) appName else "$appName ($packageName)"
+}
+
 class MainActivity : AppCompatActivity() {
     companion object {
         private val TAG = Preferences::class.qualifiedName
     }
 
     @SuppressLint("QueryPermissionsNeeded")
-    private fun getInstalledPackages(flags: Int = 0) =
+    private fun getInstalledPackagesInfo(flags: Long = 0) =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             packageManager.getInstalledPackages(
-                PackageManager.PackageInfoFlags.of(flags.toLong()),
+                PackageManager.PackageInfoFlags.of(flags),
             )
         } else {
             @Suppress("DEPRECATION")
-            packageManager.getInstalledPackages(flags)
+            packageManager.getInstalledPackages(flags.toInt())
         }
 
-    private fun getInstalledPackagesNames(flags: Int = 0) =
-        getInstalledPackages(flags).map { it.packageName }
+    private fun getApplicationInfo(packageName: String, flags: Long = 0) =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            packageManager.getApplicationInfo(
+                packageName,
+                PackageManager.ApplicationInfoFlags.of(flags),
+            )
+        } else {
+            @Suppress("DEPRECATION")
+            packageManager.getApplicationInfo(packageName, flags.toInt())
+        }
+
+    private fun getInstalledPackages(flags: Long = 0) =
+        getInstalledPackagesInfo(flags).map { packageInfo ->
+            val packageName = packageInfo.packageName
+            val appInfo = getApplicationInfo(packageName)
+            val appName = packageManager.getApplicationLabel(appInfo) as String
+            Pkg(packageName, appName)
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,11 +56,12 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "whitelist: ${whitelist.joinToString()}")
 
         val packageList =
-            getInstalledPackagesNames()
+            getInstalledPackages()
                 .sortedWith(
                     compareBy(
-                        { !whitelist.contains(it) },
-                        { it },
+                        { !whitelist.contains(it.packageName) },
+                        { it.appName },
+                        { it.packageName },
                     ),
                 )
         val adapter =
@@ -54,10 +75,10 @@ class MainActivity : AppCompatActivity() {
         listView.choiceMode = ListView.CHOICE_MODE_MULTIPLE
         for (idx in 0 until adapter.count) {
             val item = adapter.getItem(idx)
-            listView.setItemChecked(idx, whitelist.contains(item))
+            listView.setItemChecked(idx, whitelist.contains(item!!.packageName))
         }
         listView.setOnItemClickListener { _, _, position, _ ->
-            val packageName = adapter.getItem(position)!!
+            val packageName = adapter.getItem(position)!!.packageName
             if (listView.isItemChecked(position)) {
                 Preferences.addToWhitelist(this, packageName)
             } else {
