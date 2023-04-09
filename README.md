@@ -39,7 +39,7 @@ notification dot.
   - Systemizing whitelisted apps
   - `com.android.systemui.statusbar.phone.PhoneStatusBarPolicy` => `onLocationActiveChanged`
   - a combination of all those
-- UI is clunky but simple and straight to the point. It lacks a search feature though.
+- UI is clunky but simple and straight to the point.
 
 ### Contributing
 
