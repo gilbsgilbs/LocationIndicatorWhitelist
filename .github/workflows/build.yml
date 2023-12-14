@@ -17,7 +17,7 @@ jobs:
           java-version: '17'
       - uses: android-actions/setup-android@v3
       - run: ./gradlew --no-daemon assemble
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: apks
           path: app/build/outputs/apk/
