@@ -1,0 +1,1 @@
+prevent apps from spamming the annoying location notification dot on Android 12+
