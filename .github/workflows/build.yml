@@ -14,7 +14,7 @@ jobs:
       - uses: actions/setup-java@v6
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '17.0.20+101'
       - uses: android-actions/setup-android@v4
       - run: ./gradlew --no-daemon assemble
       - uses: actions/upload-artifact@v7
